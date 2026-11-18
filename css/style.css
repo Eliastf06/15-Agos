@@ -620,19 +620,15 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   SECCIÓN DRESS CODE MEJORADA
+   SECCIÓN DRESS CODE (SOLO FORMAL)
    ========================================================================== */
-.dress-code-card {
-  max-width: 680px;
-}
-
 .dress-code-banner {
   width: 100%;
   max-width: 380px;
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  margin: 1.1rem 0 1.75rem;
+  margin: 1.15rem 0 1.45rem;
 }
 
 .dress-code-banner__line {
@@ -644,89 +640,29 @@ body.no-scroll {
 .dress-code-banner__tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 1.65rem;
+  gap: 0.65rem;
+  padding: 0.62rem 1.85rem;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, rgba(29, 78, 216, 0.52), rgba(56, 189, 248, 0.28));
-  border: 1px solid rgba(125, 211, 252, 0.6);
+  border: 1px solid rgba(125, 211, 252, 0.62);
   color: var(--celeste-ice);
-  font-size: 1.02rem;
+  font-size: 1.08rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  box-shadow: 0 8px 24px rgba(2, 10, 26, 0.55), 0 0 24px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 8px 24px rgba(2, 10, 26, 0.55), 0 0 26px rgba(56, 189, 248, 0.34);
 }
 
 .dress-code-banner__tag i {
   color: var(--celeste-main);
-  font-size: 0.9rem;
-}
-
-.dress-code-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.85rem, 2.5vw, 1.35rem);
-  margin-bottom: 1.5rem;
-}
-
-.dress-code-item {
-  padding: 1.35rem 1.15rem;
-  border-radius: var(--radius-md);
-  background: linear-gradient(170deg, rgba(14, 38, 77, 0.72) 0%, rgba(4, 13, 30, 0.86) 100%);
-  border: 1px solid rgba(125, 211, 252, 0.28);
-  box-shadow: inset 0 1px 0 rgba(224, 242, 254, 0.12), 0 10px 24px rgba(2, 8, 22, 0.45);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  transition: transform 0.3s var(--ease-reveal), border-color 0.3s ease;
-}
-
-.dress-code-item:hover {
-  transform: translateY(-3px);
-  border-color: rgba(125, 211, 252, 0.52);
-}
-
-.dress-code-item__icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(125, 211, 252, 0.35);
-  color: var(--celeste-soft);
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.2rem;
-}
-
-.dress-code-item__title {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.dress-code-item__text {
   font-size: 0.92rem;
-  line-height: 1.55;
+}
+
+.dress-code-note {
+  font-size: clamp(1rem, 2.1vw, 1.1rem);
+  line-height: 1.7;
   color: var(--text-secondary);
-}
-
-.dress-code-footer-note {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.dress-code-footer-note i {
-  color: var(--celeste-main);
-  font-size: 0.8rem;
+  max-width: 460px;
 }
 
 /* ==========================================================================
@@ -1057,10 +993,6 @@ body.no-scroll {
 
   .gallery-grid {
     gap: 0.75rem;
-  }
-
-  .dress-code-grid {
-    grid-template-columns: 1fr;
   }
 
   .music-btn {
