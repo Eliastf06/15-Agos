@@ -1,0 +1,292 @@
+/* ==========================================================================
+   VARIABLES DE COLOR Y ESTILOS PRINCIPALES (css/style.css)
+   ========================================================================== */
+:root {
+  /* Paleta Única: Azules Profundos & Celestes Luminosos */
+  --bg-primary: #061021;
+  --bg-secondary: #0b1c38;
+  --bg-surface: rgba(13, 33, 66, 0.72);
+  --bg-surface-border: rgba(125, 211, 252, 0.25);
+
+  /* Azules y Celestes de Acento */
+  --blue-royal: #1d4ed8;
+  --blue-sapphire: #2563eb;
+  --celeste-main: #38bdf8;
+  --celeste-soft: #7dd3fc;
+  --celeste-ice: #e0f2fe;
+
+  /* Tipografía y Contraste (ratio >= 4.5:1) */
+  --text-primary: #f0f9ff;
+  --text-secondary: #bae6fd;
+  --text-muted: #93c5fd;
+
+  /* Efectos, Sombras y Radios */
+  --glow-celeste: 0 0 36px rgba(56, 189, 248, 0.42);
+  --radius-md: 1rem;
+  --radius-full: 9999px;
+
+  /* Tipografías */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Curvas de animación */
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   RESET Y BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+:focus-visible {
+  outline: 2px solid var(--celeste-main);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   CONTENIDO PRINCIPAL DE LA INVITACIÓN
+   ========================================================================== */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-section {
+  position: relative;
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 2rem);
+  overflow: hidden;
+}
+
+.hero-ambient-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(95px);
+  opacity: 0.44;
+}
+
+.ambient-orb--one {
+  width: clamp(280px, 45vw, 560px);
+  height: clamp(280px, 45vw, 560px);
+  background: radial-gradient(circle, var(--blue-sapphire), transparent 70%);
+  top: -10%;
+  left: -8%;
+}
+
+.ambient-orb--two {
+  width: clamp(260px, 40vw, 500px);
+  height: clamp(260px, 40vw, 500px);
+  background: radial-gradient(circle, var(--celeste-main), transparent 70%);
+  bottom: -12%;
+  right: -6%;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.25rem;
+  border-radius: var(--radius-full);
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid var(--bg-surface-border);
+  color: var(--celeste-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+/* Título principal "Agostina" con gran protagonismo */
+.hero-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(4.6rem, 13vw, 8.6rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #ffffff 25%, #e0f2fe 68%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 28px rgba(56, 189, 248, 0.5));
+  padding: 0 0.5rem;
+}
+
+.hero-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 300px;
+  margin: 1.25rem 0 1.5rem;
+  color: var(--celeste-main);
+  font-size: 0.85rem;
+}
+
+.ornament-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--celeste-main), transparent);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.2vw, 1.18rem);
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin-bottom: 2.25rem;
+}
+
+.placeholder-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px dashed var(--bg-surface-border);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  box-shadow: var(--glow-celeste);
+}
+
+/* ==========================================================================
+   ANIMACIONES DE REVELADO AL HACER SCROLL
+   ========================================================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  transition: opacity 0.85s var(--ease-reveal), transform 0.85s var(--ease-reveal);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ==========================================================================
+   SISTEMA DE NOTIFICACIONES TOAST
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: min(360px, calc(100vw - 2.5rem));
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(8, 22, 46, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  color: #f0f9ff;
+  box-shadow: 0 10px 28px rgba(2, 8, 20, 0.6);
+  font-size: 0.88rem;
+  line-height: 1.35;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+.toast.toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast__icon {
+  color: #38bdf8;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.toast__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #93c5fd;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.toast__close:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   RESPONSIVIDAD Y ACCESIBILIDAD
+   ========================================================================== */
+@media (max-width: 640px) {
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
