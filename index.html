@@ -21,12 +21,21 @@
 </head>
 <body class="no-scroll">
 
+  <!-- Música de fondo -->
+  <audio id="bg-music" preload="auto" loop>
+    <source src="multimedia/background-song.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- Contenedor donde se carga dinámicamente puerta-modal.html -->
   <div id="puerta-modal-slot" data-modal-src="puerta-modal.html"></div>
 
-  <!-- CONTENIDO PRINCIPAL DE LA INVITACIÓN (Emerge del fondo al terminar de abrirse las puertas) -->
+  <!-- CONTENIDO PRINCIPAL DE LA INVITACIÓN -->
   <div id="page-wrapper" class="page-wrapper" inert>
-    <main id="main-content">
+    <!-- Fondo fijo a lo largo de toda la página con filtro de legibilidad -->
+    <div class="site-background" aria-hidden="true"></div>
+
+    <main id="main-content" class="main-content">
+      <!-- Sección 1: Portada y bienvenida -->
       <section id="inicio" class="hero-section">
         <div class="hero-ambient-bg" aria-hidden="true">
           <div class="ambient-orb ambient-orb--one"></div>
@@ -48,17 +57,57 @@
           </div>
 
           <p class="hero-subtitle">
-            Una noche soñada está por comenzar. Este espacio irá tomando forma con todos los detalles para compartir juntos este momento inolvidable.
+            Hoy queda en el recuerdo mi niñez, pero hoy renazco para vivir el momento más feliz de mi vida: mi adolescencia. Quisiera que estés junto a mí para que compartamos mis 15 años.
           </p>
+        </div>
+      </section>
 
-          <!-- Contenedor preparado para las próximas secciones -->
-          <div id="proximas-secciones" class="placeholder-card">
-            <i class="fas fa-compass" aria-hidden="true"></i>
-            <span>Puerta abierta y navegación habilitada — listo para sumar las siguientes secciones.</span>
+      <!-- Sección 2: Dirección y cómo llegar -->
+      <section id="ubicacion" class="location-section" aria-labelledby="ubicacion-titulo">
+        <div class="location-card reveal-on-scroll">
+          <div class="location-icon-badge" aria-hidden="true">
+            <i class="fas fa-map-marker-alt"></i>
           </div>
+
+          <span class="section-eyebrow">Lugar de la celebración</span>
+          <h2 id="ubicacion-titulo" class="section-title">¿Dónde nos encontramos?</h2>
+
+          <div class="section-ornament" aria-hidden="true">
+            <span class="ornament-line"></span>
+            <i class="fas fa-sparkles"></i>
+            <span class="ornament-line"></span>
+          </div>
+
+          <address class="location-address">
+            Laprida s/n, J5415 Villa del Salvador, San Juan.
+          </address>
+
+          <a
+            href="https://maps.app.goo.gl/LTeHaEKAtmrXLCh6A?g_st=ic"
+            class="btn-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Cómo llegar a Laprida s/n, J5415 Villa del Salvador, San Juan en Google Maps"
+          >
+            <i class="fas fa-directions" aria-hidden="true"></i>
+            <span>Cómo llegar</span>
+          </a>
         </div>
       </section>
     </main>
+
+    <!-- Control flotante de música de fondo -->
+    <button
+      type="button"
+      id="music-toggle"
+      class="music-btn"
+      aria-label="Activar música de fondo"
+      aria-pressed="false"
+      title="Música de fondo"
+    >
+      <span class="music-btn__ring" aria-hidden="true"></span>
+      <i class="fas fa-volume-mute" aria-hidden="true"></i>
+    </button>
   </div>
 
   <!-- Contenedor de notificaciones Toast accesibles -->
