@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Opciones de regalo para los 15 años de Agostina.">
+  <meta name="theme-color" content="#061021">
+  <title>Presentes — Mis 15 Años Agostina</title>
+
+  <!-- Ícono de la página -->
+  <link rel="icon" type="image/png" href="multimedia/logo.png">
+  <link rel="apple-touch-icon" href="multimedia/logo.png">
+
+  <!-- Tipografías con carga optimizada -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Iconos Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="page-wrapper is-revealed">
+    <!-- Mismo fondo fijo con filtro de legibilidad -->
+    <div class="site-background" aria-hidden="true"></div>
+
+    <main id="main-content" class="main-content">
+      <section class="content-section gifts-page-section" aria-labelledby="regalos-titulo">
+        <div class="section-card reveal-on-scroll is-visible">
+          <div class="section-icon-badge" aria-hidden="true">
+            <i class="fas fa-gift"></i>
+          </div>
+
+          <span class="section-eyebrow">Mis 15 Años — Agostina</span>
+          <h1 id="regalos-titulo" class="section-title">Mesa de Presentes</h1>
+
+          <div class="section-ornament" aria-hidden="true">
+            <span class="ornament-line"></span>
+            <i class="fas fa-sparkles"></i>
+            <span class="ornament-line"></span>
+          </div>
+
+          <p class="section-description">
+            El mejor regalo es compartir juntos esta noche tan especial. Si deseas obsequiarme algo, puedes hacerlo mediante transferencia o en el buzón de sobres durante la fiesta.
+          </p>
+
+          <div class="gift-box-details">
+            <div class="gift-detail-item">
+              <span class="gift-detail-label">Alias Bancario</span>
+              <strong id="gift-alias" class="gift-detail-value">aagooss.mpp</strong>
+            </div>
+
+            <button
+              type="button"
+              id="copy-alias-btn"
+              class="btn-secondary"
+              data-copy-target="gift-alias"
+            >
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar alias</span>
+            </button>
+          </div>
+
+          <a href="index.html" class="btn-primary">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            <span>Volver a la invitación</span>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <script src="js/script.js"></script>
+</body>
+</html>

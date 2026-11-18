@@ -6,8 +6,8 @@
   --bg-primary: #061021;
   --bg-secondary: #0b1c38;
   --bg-surface: rgba(7, 20, 43, 0.78);
-  --bg-surface-strong: rgba(6, 17, 38, 0.84);
-  --bg-surface-border: rgba(125, 211, 252, 0.32);
+  --bg-surface-strong: rgba(6, 17, 38, 0.86);
+  --bg-surface-border: rgba(125, 211, 252, 0.34);
 
   /* Velo sobre la imagen de fondo para garantizar legibilidad (contraste >= 4.5:1) */
   --bg-image-tint-top: rgba(6, 16, 33, 0.68);
@@ -28,7 +28,7 @@
 
   /* Efectos, Sombras y Radios */
   --glow-celeste: 0 0 36px rgba(56, 189, 248, 0.38);
-  --shadow-card: 0 18px 46px rgba(2, 8, 22, 0.68), 0 0 28px rgba(56, 189, 248, 0.16);
+  --shadow-card: 0 18px 46px rgba(2, 8, 22, 0.7), 0 0 28px rgba(56, 189, 248, 0.18);
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-full: 9999px;
@@ -96,8 +96,8 @@ body.no-scroll {
 
 .page-wrapper.is-revealed {
   opacity: 1;
-  transform: scale(1) translateY(0);
-  filter: blur(0);
+  transform: none;
+  filter: none;
 }
 
 /* Capa fija con multimedia/fondo.png y degradado protector para lectura */
@@ -136,7 +136,7 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   SECCIÓN 1: PORTADA Y BIENVENIDA
+   SECCIÓN 1: PORTADA ("MIS 15 AÑOS" -> IMG1.JPEG -> "AGOSTINA" -> FRASE)
    ========================================================================== */
 .hero-section {
   position: relative;
@@ -144,7 +144,7 @@ body.no-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 4vw, 2rem);
+  padding: clamp(2.75rem, 6vw, 4.75rem) clamp(1.25rem, 4vw, 2rem);
   overflow: hidden;
 }
 
@@ -159,7 +159,7 @@ body.no-scroll {
   position: absolute;
   border-radius: 50%;
   filter: blur(95px);
-  opacity: 0.35;
+  opacity: 0.38;
 }
 
 .ambient-orb--one {
@@ -181,46 +181,150 @@ body.no-scroll {
 .hero-container {
   position: relative;
   z-index: 1;
-  max-width: 780px;
   width: 100%;
+  max-width: 740px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Distintivo "Mis 15 Años" arriba de la foto y más grande */
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.48rem 1.3rem;
+  gap: 0.75rem;
+  padding: 0.7rem 2rem;
   border-radius: var(--radius-full);
-  background: rgba(8, 22, 46, 0.72);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--bg-surface-border);
-  color: var(--celeste-soft);
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.52), rgba(56, 189, 248, 0.28));
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(125, 211, 252, 0.62);
+  color: var(--celeste-ice);
+  font-size: clamp(1.05rem, 2.4vw, 1.32rem);
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  margin-bottom: 0.85rem;
-  box-shadow: 0 6px 20px rgba(2, 8, 22, 0.45);
+  margin-bottom: 1.65rem;
+  box-shadow: 0 10px 28px rgba(2, 8, 22, 0.6), 0 0 28px rgba(56, 189, 248, 0.38);
 }
 
+.hero-badge i {
+  color: var(--celeste-main);
+  font-size: 1.05rem;
+}
+
+/* Marco de Arco Celestial para img1.jpeg (sin etiqueta de texto superpuesta) */
+.hero-portrait-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.hero-portrait-halo {
+  position: absolute;
+  width: 124%;
+  height: 118%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.34) 0%,
+    rgba(37, 99, 235, 0.18) 45%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+.hero-portrait-frame {
+  position: relative;
+  width: clamp(235px, 56vw, 325px);
+  aspect-ratio: 3 / 4.1;
+  padding: 0.65rem;
+  border-radius: 999px 999px 1.75rem 1.75rem;
+  background: linear-gradient(
+    165deg,
+    rgba(125, 211, 252, 0.36) 0%,
+    rgba(13, 33, 66, 0.78) 50%,
+    rgba(6, 16, 33, 0.92) 100%
+  );
+  border: 1px solid rgba(125, 211, 252, 0.52);
+  box-shadow:
+    0 24px 54px rgba(2, 8, 22, 0.84),
+    0 0 38px rgba(56, 189, 248, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  display: block;
+  transition: transform 0.45s var(--ease-reveal), box-shadow 0.45s ease, border-color 0.45s ease;
+}
+
+.hero-portrait-frame:hover {
+  transform: translateY(-4px);
+  border-color: var(--celeste-ice);
+  box-shadow:
+    0 28px 62px rgba(2, 8, 22, 0.88),
+    0 0 48px rgba(125, 211, 252, 0.5);
+}
+
+.portrait-outer-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 999px 999px 2.15rem 2.15rem;
+  border: 1px dashed rgba(125, 211, 252, 0.42);
+  pointer-events: none;
+}
+
+.portrait-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 999px 999px 1.25rem 1.25rem;
+  background-color: #07142b;
+}
+
+.portrait-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.7s var(--ease-reveal);
+}
+
+.hero-portrait-frame:hover .portrait-image {
+  transform: scale(1.04);
+}
+
+/* Viñeta atmosférica que integra la fotografía con el fondo de la invitación */
+.portrait-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 42%, transparent 56%, rgba(6, 16, 33, 0.6) 100%),
+    linear-gradient(180deg, rgba(6, 16, 33, 0.1) 0%, transparent 35%, transparent 68%, rgba(6, 16, 33, 0.78) 100%);
+}
+
+/* Nombre "Agostina" protagonista */
 .hero-title {
+  position: relative;
   display: inline-block;
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(4.6rem, 13vw, 8.6rem);
-  line-height: 1.14;
+  font-size: clamp(4.8rem, 13vw, 8.8rem);
+  line-height: 1.12;
   letter-spacing: 0.02em;
-  background: linear-gradient(180deg, #ffffff 25%, #e0f2fe 68%, #7dd3fc 100%);
+  background: linear-gradient(180deg, #ffffff 22%, #e0f2fe 58%, #7dd3fc 88%, #38bdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 6px 26px rgba(2, 10, 26, 0.9)) drop-shadow(0 0 24px rgba(56, 189, 248, 0.45));
-  padding: 0.04em 0.6rem 0.16em;
+  filter:
+    drop-shadow(0 8px 28px rgba(2, 10, 26, 0.95))
+    drop-shadow(0 0 34px rgba(56, 189, 248, 0.58));
+  padding: 0.04em 0.65rem 0.16em;
 }
 
 .hero-ornament,
@@ -231,7 +335,7 @@ body.no-scroll {
   gap: 0.85rem;
   width: 100%;
   max-width: 280px;
-  margin: 0.95rem 0 1.5rem;
+  margin: 0.75rem 0 1.45rem;
   color: var(--celeste-main);
   font-size: 0.85rem;
 }
@@ -243,10 +347,10 @@ body.no-scroll {
 }
 
 .hero-subtitle {
-  font-size: clamp(1.05rem, 2.2vw, 1.22rem);
+  font-size: clamp(1.04rem, 2.1vw, 1.2rem);
   line-height: 1.78;
   color: var(--text-secondary);
-  max-width: 640px;
+  max-width: 630px;
   padding: 1.35rem 1.75rem;
   border-radius: var(--radius-lg);
   background: var(--bg-surface);
@@ -257,17 +361,191 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   SECCIÓN 2: DIRECCIÓN Y BOTÓN CÓMO LLEGAR
+   SECCIÓN 2: GALERÍA DE RECUERDOS INTEGRADA (IMG2.JPEG A IMG5.JPEG)
    ========================================================================== */
-.location-section {
+.gallery-card {
+  max-width: 760px;
+}
+
+.gallery-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+  margin-top: 0.4rem;
+}
+
+.gallery-item {
+  margin: 0;
+}
+
+.gallery-tile {
   position: relative;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2rem) clamp(4.5rem, 9vw, 7rem);
+  width: 100%;
+  aspect-ratio: 4 / 4.8;
+  padding: 0.45rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(160deg, rgba(125, 211, 252, 0.28), rgba(7, 20, 43, 0.86));
+  border: 1px solid rgba(125, 211, 252, 0.34);
+  box-shadow: 0 14px 34px rgba(2, 8, 22, 0.65), 0 0 20px rgba(56, 189, 248, 0.14);
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+  transition: transform 0.38s var(--ease-reveal), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.gallery-tile:hover {
+  transform: translateY(-4px);
+  border-color: rgba(224, 242, 254, 0.68);
+  box-shadow: 0 20px 44px rgba(2, 8, 22, 0.78), 0 0 30px rgba(56, 189, 248, 0.32);
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 0.9rem;
+  display: block;
+  transition: transform 0.65s var(--ease-reveal);
+}
+
+.gallery-tile:hover .gallery-img {
+  transform: scale(1.045);
+}
+
+/* Viñeta sutil para integrar cada foto con la estética nocturna azul-celeste */
+.gallery-vignette {
+  position: absolute;
+  inset: 0.45rem;
+  border-radius: 0.9rem;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 45%, transparent 58%, rgba(6, 16, 33, 0.6) 100%),
+    linear-gradient(180deg, transparent 62%, rgba(6, 16, 33, 0.72) 100%);
+}
+
+.gallery-zoom-badge {
+  position: absolute;
+  bottom: 0.9rem;
+  right: 0.9rem;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: var(--radius-full);
+  background: rgba(6, 16, 33, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  color: var(--celeste-soft);
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.88;
+  transition: transform 0.28s ease, background-color 0.28s ease, color 0.28s ease;
+}
+
+.gallery-tile:hover .gallery-zoom-badge {
+  transform: scale(1.08);
+  background: rgba(37, 99, 235, 0.88);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   VISOR LIGHTBOX DE FOTOGRAFÍAS
+   ========================================================================== */
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: rgba(3, 10, 24, 0.88);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.photo-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.32s ease, visibility 0s linear 0s;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(13, 33, 66, 0.88);
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  color: var(--celeste-ice);
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.lightbox-close-btn:hover {
+  transform: rotate(90deg) scale(1.06);
+  border-color: var(--celeste-main);
+  background: rgba(37, 99, 235, 0.65);
+}
+
+.lightbox-frame {
+  max-width: min(90vw, 680px);
+  max-height: 84vh;
+  padding: 0.55rem;
+  border-radius: 1.35rem;
+  background: linear-gradient(160deg, rgba(125, 211, 252, 0.32), rgba(7, 20, 43, 0.92));
+  border: 1px solid rgba(125, 211, 252, 0.48);
+  box-shadow: 0 24px 64px rgba(2, 8, 22, 0.9), 0 0 40px rgba(56, 189, 248, 0.3);
+  transform: scale(0.95);
+  transition: transform 0.35s var(--ease-reveal);
+}
+
+.photo-lightbox.is-open .lightbox-frame {
+  transform: scale(1);
+}
+
+.lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(84vh - 1.1rem);
+  width: auto;
+  height: auto;
+  border-radius: 1rem;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   SECCIONES DE CONTENIDO GENERAL
+   ========================================================================== */
+.content-section {
+  position: relative;
+  padding: clamp(1.75rem, 4.5vw, 3.25rem) clamp(1.25rem, 4vw, 2rem);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.location-card {
+.content-section--last {
+  padding-bottom: clamp(5.5rem, 11vw, 8rem);
+}
+
+.gifts-page-section {
+  min-height: 100vh;
+}
+
+.section-card {
   position: relative;
   width: 100%;
   max-width: 640px;
@@ -283,7 +561,12 @@ body.no-scroll {
   align-items: center;
 }
 
-.location-icon-badge {
+.section-card--highlight {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 20px 52px rgba(2, 8, 22, 0.78), 0 0 36px rgba(56, 189, 248, 0.25);
+}
+
+.section-icon-badge {
   width: 3.75rem;
   height: 3.75rem;
   border-radius: var(--radius-full);
@@ -299,6 +582,7 @@ body.no-scroll {
 }
 
 .section-eyebrow {
+  display: block;
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -327,8 +611,235 @@ body.no-scroll {
   margin-bottom: 2rem;
 }
 
-/* Botón Principal "Cómo llegar" */
-.btn-primary {
+.section-description {
+  font-size: clamp(1rem, 2.1vw, 1.12rem);
+  line-height: 1.72;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+/* ==========================================================================
+   SECCIÓN DRESS CODE MEJORADA
+   ========================================================================== */
+.dress-code-card {
+  max-width: 680px;
+}
+
+.dress-code-banner {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 1.1rem 0 1.75rem;
+}
+
+.dress-code-banner__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.7), transparent);
+}
+
+.dress-code-banner__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.65rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.52), rgba(56, 189, 248, 0.28));
+  border: 1px solid rgba(125, 211, 252, 0.6);
+  color: var(--celeste-ice);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(2, 10, 26, 0.55), 0 0 24px rgba(56, 189, 248, 0.3);
+}
+
+.dress-code-banner__tag i {
+  color: var(--celeste-main);
+  font-size: 0.9rem;
+}
+
+.dress-code-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+  margin-bottom: 1.5rem;
+}
+
+.dress-code-item {
+  padding: 1.35rem 1.15rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(170deg, rgba(14, 38, 77, 0.72) 0%, rgba(4, 13, 30, 0.86) 100%);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  box-shadow: inset 0 1px 0 rgba(224, 242, 254, 0.12), 0 10px 24px rgba(2, 8, 22, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  transition: transform 0.3s var(--ease-reveal), border-color 0.3s ease;
+}
+
+.dress-code-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(125, 211, 252, 0.52);
+}
+
+.dress-code-item__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  color: var(--celeste-soft);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.2rem;
+}
+
+.dress-code-item__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dress-code-item__text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.dress-code-footer-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.dress-code-footer-note i {
+  color: var(--celeste-main);
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   SECCIÓN CUENTA REGRESIVA (2 DE ENERO · 21:00 HS)
+   ========================================================================== */
+.countdown-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 1.15rem;
+  margin: 0.85rem 0 1.75rem;
+  border-radius: var(--radius-full);
+  background: rgba(14, 38, 77, 0.72);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  color: var(--celeste-soft);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.countdown-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.55rem, 2vw, 1rem);
+}
+
+.countdown-box {
+  padding: clamp(0.95rem, 2.8vw, 1.35rem) 0.45rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(170deg, rgba(14, 38, 77, 0.82) 0%, rgba(4, 13, 30, 0.9) 100%);
+  border: 1px solid rgba(125, 211, 252, 0.34);
+  box-shadow: inset 0 1px 0 rgba(224, 242, 254, 0.14), 0 10px 24px rgba(2, 8, 22, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.countdown-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 6vw, 3.15rem);
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 20%, #bae6fd 70%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 12px rgba(56, 189, 248, 0.35));
+}
+
+.countdown-label {
+  font-size: clamp(0.7rem, 1.8vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.countdown-finished {
+  grid-column: 1 / -1;
+  padding: 1.15rem 1.5rem;
+  border-radius: var(--radius-md);
+  background: rgba(29, 78, 216, 0.32);
+  border: 1px solid rgba(125, 211, 252, 0.48);
+  color: var(--celeste-ice);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+  font-weight: 700;
+}
+
+/* Detalle en página de regalos */
+.gift-box-details {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.25rem;
+  margin-bottom: 1.75rem;
+  border-radius: var(--radius-md);
+  background: rgba(4, 13, 30, 0.72);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.gift-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.gift-detail-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.gift-detail-value {
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--celeste-ice);
+}
+
+/* ==========================================================================
+   BOTONES PRINCIPAL Y SECUNDARIO
+   ========================================================================== */
+.btn-primary,
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -336,16 +847,25 @@ body.no-scroll {
   min-height: 3.1rem;
   padding: 0.85rem 2rem;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--blue-sapphire) 0%, var(--celeste-main) 100%);
-  border: 1px solid rgba(224, 242, 254, 0.55);
-  color: #041024;
   font-family: var(--font-body);
   font-size: 0.98rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.28s var(--ease-reveal),
+    box-shadow 0.28s ease,
+    filter 0.28s ease,
+    background-color 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-sapphire) 0%, var(--celeste-main) 100%);
+  border: 1px solid rgba(224, 242, 254, 0.55);
+  color: #041024;
   box-shadow: 0 10px 26px rgba(2, 12, 32, 0.55), 0 0 22px rgba(56, 189, 248, 0.42);
-  transition: transform 0.28s var(--ease-reveal), box-shadow 0.28s ease, filter 0.28s ease;
 }
 
 .btn-primary i {
@@ -367,39 +887,58 @@ body.no-scroll {
   transform: translateY(0);
 }
 
+.btn-secondary {
+  background: rgba(14, 38, 77, 0.72);
+  border: 1px solid rgba(125, 211, 252, 0.48);
+  color: var(--celeste-ice);
+  box-shadow: 0 8px 22px rgba(2, 12, 32, 0.45), 0 0 18px rgba(56, 189, 248, 0.2);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  background: rgba(29, 78, 216, 0.42);
+  border-color: var(--celeste-main);
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(2, 12, 32, 0.6), 0 0 26px rgba(56, 189, 248, 0.42);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
 /* ==========================================================================
-   BOTÓN FLOTANTE DE MÚSICA DE FONDO
+   BOTÓN FLOTANTE DE MÚSICA (SIEMPRE VISIBLE Y SUPERPUESTO A TODO)
    ========================================================================== */
 .music-btn {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  z-index: 8500;
-  width: 3rem;
-  height: 3rem;
+  z-index: 10000;
+  width: 3.15rem;
+  height: 3.15rem;
   border-radius: var(--radius-full);
-  background: rgba(10, 26, 54, 0.86);
+  background: rgba(8, 22, 46, 0.9);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(125, 211, 252, 0.45);
+  border: 1px solid rgba(125, 211, 252, 0.52);
   color: var(--celeste-soft);
-  font-size: 1rem;
+  font-size: 1.05rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(2, 8, 20, 0.65), 0 0 18px rgba(56, 189, 248, 0.22);
+  box-shadow: 0 10px 28px rgba(2, 8, 20, 0.78), 0 0 22px rgba(56, 189, 248, 0.3);
   transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .music-btn:hover {
-  transform: scale(1.07);
+  transform: scale(1.08);
   border-color: var(--celeste-main);
   color: #ffffff;
-  box-shadow: 0 10px 28px rgba(2, 8, 20, 0.75), 0 0 24px rgba(56, 189, 248, 0.42);
+  box-shadow: 0 12px 32px rgba(2, 8, 20, 0.85), 0 0 28px rgba(56, 189, 248, 0.5);
 }
 
 .music-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
 .music-btn.is-playing {
@@ -411,7 +950,7 @@ body.no-scroll {
   position: absolute;
   inset: -4px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(56, 189, 248, 0.45);
+  border: 1px solid rgba(56, 189, 248, 0.5);
   opacity: 0;
   pointer-events: none;
 }
@@ -423,10 +962,10 @@ body.no-scroll {
 @keyframes musicPulse {
   0% {
     transform: scale(0.95);
-    opacity: 0.75;
+    opacity: 0.78;
   }
   100% {
-    transform: scale(1.38);
+    transform: scale(1.4);
     opacity: 0;
   }
 }
@@ -452,7 +991,7 @@ body.no-scroll {
   position: fixed;
   bottom: 1.25rem;
   left: 1.25rem;
-  z-index: 9000;
+  z-index: 10001;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -465,7 +1004,7 @@ body.no-scroll {
   gap: 0.75rem;
   padding: 0.85rem 1rem;
   border-radius: var(--radius-md);
-  background: rgba(8, 22, 46, 0.92);
+  background: rgba(8, 22, 46, 0.94);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(125, 211, 252, 0.35);
   color: #f0f9ff;
@@ -507,15 +1046,28 @@ body.no-scroll {
    RESPONSIVIDAD Y ACCESIBILIDAD
    ========================================================================== */
 @media (max-width: 640px) {
+  .hero-badge {
+    padding: 0.62rem 1.5rem;
+    letter-spacing: 0.2em;
+  }
+
   .hero-subtitle {
     padding: 1.15rem 1.25rem;
+  }
+
+  .gallery-grid {
+    gap: 0.75rem;
+  }
+
+  .dress-code-grid {
+    grid-template-columns: 1fr;
   }
 
   .music-btn {
     bottom: 1.15rem;
     right: 1.15rem;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.85rem;
+    height: 2.85rem;
   }
 
   .toast-container {
@@ -523,6 +1075,12 @@ body.no-scroll {
     right: 4.5rem;
     bottom: 1.15rem;
     max-width: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .countdown-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

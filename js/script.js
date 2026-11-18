@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let userManuallyPaused = false;
 
   /* ==========================================================================
-     1. MÚSICA DE FONDO AUTOMÁTICA Y CONTROL FLOTANTE
+     1. MÚSICA DE FONDO AUTOMÁTICA Y CONTROL FLOTANTE SIEMPRE VISIBLE
      ========================================================================== */
   function updateMusicButtonState(isPlaying) {
     if (!musicToggle) return;
@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
           removeInteractionUnlockers();
         })
         .catch(() => {
-          // El navegador requiere interacción previa; queda listo para iniciar al primer toque/clic
           updateMusicButtonState(false);
         });
     }
@@ -57,11 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (bgMusic) {
     bgMusic.volume = 0.65;
 
-    // Intento inmediato al entrar a la página
     tryStartBackgroundMusic();
     window.addEventListener('load', tryStartBackgroundMusic, { once: true });
 
-    // Respaldo automático ante la primera interacción si el navegador bloqueó el autoplay
     document.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true });
     document.addEventListener('touchstart', handleFirstUserInteraction, { passive: true });
     document.addEventListener('keydown', handleFirstUserInteraction);
@@ -85,7 +82,117 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     2. SISTEMA DE NOTIFICACIONES TOAST (Disponible para próximas secciones)
+     2. VISOR LIGHTBOX ACCESIBLE PARA LAS FOTOGRAFÍAS
+     ========================================================================== */
+  function initPhotoLightbox() {
+    const lightbox = document.getElementById('photo-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('lightbox-close-btn');
+
+    if (!lightbox || !lightboxImg) return;
+
+    let lastTrigger = null;
+
+    function openLightbox(src, alt, trigger) {
+      lastTrigger = trigger || document.activeElement;
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || 'Fotografía de Agostina';
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+      closeBtn?.focus();
+    }
+
+    function closeLightbox() {
+      if (!lightbox.classList.contains('is-open')) return;
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('no-scroll');
+      if (lastTrigger && typeof lastTrigger.focus === 'function') {
+        lastTrigger.focus();
+      }
+    }
+
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest('[data-lightbox-src]');
+      if (trigger) {
+        const src = trigger.getAttribute('data-lightbox-src');
+        const alt = trigger.getAttribute('data-lightbox-alt');
+        if (src) openLightbox(src, alt, trigger);
+      }
+    });
+
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox.classList.contains('is-open')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  initPhotoLightbox();
+
+  /* ==========================================================================
+     3. CUENTA REGRESIVA (2 DE ENERO · 21:00 HS)
+     ========================================================================== */
+  function initCountdown() {
+    const countdownGrid = document.getElementById('countdown-grid');
+    const daysEl = document.getElementById('cd-days');
+    const hoursEl = document.getElementById('cd-hours');
+    const minutesEl = document.getElementById('cd-minutes');
+    const secondsEl = document.getElementById('cd-seconds');
+
+    if (!countdownGrid || !daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+    const now = new Date();
+    let targetYear = now.getFullYear();
+    let targetDate = new Date(`${targetYear}-01-02T21:00:00-03:00`);
+
+    if (now >= targetDate) {
+      targetYear += 1;
+      targetDate = new Date(`${targetYear}-01-02T21:00:00-03:00`);
+    }
+
+    const padZero = (num) => String(num).padStart(2, '0');
+
+    function updateCountdown() {
+      const current = new Date();
+      const diff = targetDate.getTime() - current.getTime();
+
+      if (diff <= 0) {
+        countdownGrid.innerHTML =
+          '<p class="countdown-finished">¡Llegó la gran noche de los 15 años de Agostina!</p>';
+        clearInterval(timerId);
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = padZero(days);
+      hoursEl.textContent = padZero(hours);
+      minutesEl.textContent = padZero(minutes);
+      secondsEl.textContent = padZero(seconds);
+    }
+
+    updateCountdown();
+    const timerId = setInterval(updateCountdown, 1000);
+  }
+
+  initCountdown();
+
+  /* ==========================================================================
+     4. SISTEMA DE NOTIFICACIONES TOAST
      ========================================================================== */
   window.showToast = function showToast(message, iconClass = 'fa-info-circle', duration = 3800) {
     if (!toastContainer) return;
@@ -118,7 +225,22 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /* ==========================================================================
-     3. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
+     5. COPIAR ALIAS EN LA PÁGINA DE REGALOS
+     ========================================================================== */
+  const copyAliasBtn = document.getElementById('copy-alias-btn');
+  copyAliasBtn?.addEventListener('click', () => {
+    const targetId = copyAliasBtn.getAttribute('data-copy-target');
+    const textToCopy = document.getElementById(targetId)?.textContent.trim();
+
+    if (textToCopy && navigator.clipboard) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        window.showToast('Alias copiado al portapapeles', 'fa-check-circle');
+      });
+    }
+  });
+
+  /* ==========================================================================
+     6. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
      ========================================================================== */
   const revealObserver = new IntersectionObserver(
     (entries) => {
@@ -139,4 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('puerta:revelando', () => {
     triggerRevealElements();
   });
+
+  if (!document.getElementById('puerta-modal-slot')) {
+    triggerRevealElements();
+  }
 });

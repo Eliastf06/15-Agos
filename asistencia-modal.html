@@ -1,0 +1,77 @@
+<!-- MODAL MODULAR DE CONFIRMACIÓN DE ASISTENCIA -->
+<div
+  id="asistencia-overlay"
+  class="asistencia-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="asistencia-modal-title"
+  aria-hidden="true"
+>
+  <div class="asistencia-card" role="document">
+    <!-- Botón cruz de salida -->
+    <button
+      type="button"
+      id="asistencia-close-btn"
+      class="asistencia-close-btn"
+      aria-label="Cerrar formulario de confirmación"
+    >
+      <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+
+    <div class="asistencia-card__header">
+      <div class="asistencia-badge-icon" aria-hidden="true">
+        <i class="fas fa-crown"></i>
+      </div>
+      <span class="asistencia-eyebrow">Mis 15 Años — Agostina</span>
+      <h2 id="asistencia-modal-title" class="asistencia-title">Confirmar asistencia</h2>
+      <p class="asistencia-subtitle">
+        Completa estos datos para registrar tu lugar en la celebración.
+      </p>
+    </div>
+
+    <form id="asistencia-form" class="asistencia-form" novalidate>
+      <!-- Campo 1: Nombre completo -->
+      <div class="form-group">
+        <label for="guest-fullname" class="form-label">
+          <i class="fas fa-user" aria-hidden="true"></i>
+          <span>Nombre y apellido</span>
+        </label>
+        <input
+          type="text"
+          id="guest-fullname"
+          name="fullname"
+          class="form-control"
+          placeholder="Ej. Camila Fernández"
+          autocomplete="name"
+          required
+        >
+        <span id="error-fullname" class="form-error" aria-live="polite"></span>
+      </div>
+
+      <!-- Campo 2: Asistencia / Cantidad de invitados -->
+      <div class="form-group">
+        <label for="guest-attendance" class="form-label">
+          <i class="fas fa-users" aria-hidden="true"></i>
+          <span>Confirmación y cantidad de personas</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="guest-attendance" name="attendance" class="form-control form-select" required>
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option value="1">Sí, asistiré (1 persona)</option>
+            <option value="2">Sí, asistiremos (2 personas)</option>
+            <option value="3">Sí, asistiremos (3 personas)</option>
+            <option value="4">Sí, asistiremos (4 personas)</option>
+            <option value="no">No podré asistir</option>
+          </select>
+          <i class="fas fa-chevron-down select-arrow" aria-hidden="true"></i>
+        </div>
+        <span id="error-attendance" class="form-error" aria-live="polite"></span>
+      </div>
+
+      <button type="submit" class="btn-primary btn-submit">
+        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+        <span>Enviar confirmación</span>
+      </button>
+    </form>
+  </div>
+</div>
