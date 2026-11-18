@@ -7,7 +7,29 @@ document.addEventListener('DOMContentLoaded', () => {
   let userManuallyPaused = false;
 
   /* ==========================================================================
-     1. MÚSICA DE FONDO AUTOMÁTICA Y CONTROL FLOTANTE SIEMPRE VISIBLE
+     1. ORDEN ALEATORIO DE LA GALERÍA EN CADA RECARGA (IMG2 A IMG10)
+     ========================================================================== */
+  function shuffleGalleryItems() {
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (!galleryGrid) return;
+
+    const items = Array.from(galleryGrid.querySelectorAll('.gallery-item'));
+    if (items.length <= 1) return;
+
+    for (let i = items.length - 1; i > 0; i -= 1) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [items[i], items[randomIndex]] = [items[randomIndex], items[i]];
+    }
+
+    const fragment = document.createDocumentFragment();
+    items.forEach((item) => fragment.appendChild(item));
+    galleryGrid.appendChild(fragment);
+  }
+
+  shuffleGalleryItems();
+
+  /* ==========================================================================
+     2. MÚSICA DE FONDO AUTOMÁTICA Y CONTROL FLOTANTE SIEMPRE VISIBLE
      ========================================================================== */
   function updateMusicButtonState(isPlaying) {
     if (!musicToggle) return;
@@ -82,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     2. VISOR LIGHTBOX ACCESIBLE PARA LAS FOTOGRAFÍAS
+     3. VISOR LIGHTBOX ACCESIBLE PARA LAS FOTOGRAFÍAS
      ========================================================================== */
   function initPhotoLightbox() {
     const lightbox = document.getElementById('photo-lightbox');
@@ -140,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPhotoLightbox();
 
   /* ==========================================================================
-     3. CUENTA REGRESIVA (2 DE ENERO · 21:00 HS)
+     4. CUENTA REGRESIVA (2 DE ENERO · 21:00 HS)
      ========================================================================== */
   function initCountdown() {
     const countdownGrid = document.getElementById('countdown-grid');
@@ -192,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
 
   /* ==========================================================================
-     4. SISTEMA DE NOTIFICACIONES TOAST
+     5. SISTEMA DE NOTIFICACIONES TOAST
      ========================================================================== */
   window.showToast = function showToast(message, iconClass = 'fa-info-circle', duration = 3800) {
     if (!toastContainer) return;
@@ -225,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /* ==========================================================================
-     5. COPIAR ALIAS EN LA PÁGINA DE REGALOS
+     6. COPIAR ALIAS EN LA PÁGINA DE REGALOS
      ========================================================================== */
   const copyAliasBtn = document.getElementById('copy-alias-btn');
   copyAliasBtn?.addEventListener('click', () => {
@@ -240,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     6. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
+     7. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
      ========================================================================== */
   const revealObserver = new IntersectionObserver(
     (entries) => {

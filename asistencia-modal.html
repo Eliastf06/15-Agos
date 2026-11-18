@@ -1,19 +1,18 @@
-<!-- MODAL MODULAR DE CONFIRMACIÓN DE ASISTENCIA -->
+<!-- Modal de Confirmación de Asistencia (asistencia-modal.html) -->
 <div
   id="asistencia-overlay"
   class="asistencia-overlay"
   role="dialog"
   aria-modal="true"
-  aria-labelledby="asistencia-modal-title"
+  aria-labelledby="asistencia-modal-titulo"
   aria-hidden="true"
 >
-  <div class="asistencia-card" role="document">
-    <!-- Botón cruz de salida -->
+  <div class="asistencia-card">
     <button
       type="button"
       id="asistencia-close-btn"
       class="asistencia-close-btn"
-      aria-label="Cerrar formulario de confirmación"
+      aria-label="Cerrar ventana de confirmación"
     >
       <i class="fas fa-times" aria-hidden="true"></i>
     </button>
@@ -22,54 +21,121 @@
       <div class="asistencia-badge-icon" aria-hidden="true">
         <i class="fas fa-crown"></i>
       </div>
-      <span class="asistencia-eyebrow">Mis 15 Años — Agostina</span>
-      <h2 id="asistencia-modal-title" class="asistencia-title">Confirmar asistencia</h2>
+      <span class="asistencia-eyebrow">Mis 15 Años · Agostina</span>
+      <h2 id="asistencia-modal-titulo" class="asistencia-title">Confirmar Asistencia</h2>
       <p class="asistencia-subtitle">
-        Completa estos datos para registrar tu lugar en la celebración.
+        Completa tus datos y te llevaremos a WhatsApp con tu mensaje listo para enviar.
       </p>
     </div>
 
     <form id="asistencia-form" class="asistencia-form" novalidate>
-      <!-- Campo 1: Nombre completo -->
+      <!-- Campo 1: Nombre / Familia -->
       <div class="form-group">
-        <label for="guest-fullname" class="form-label">
+        <label for="invitado-nombre" class="form-label">
           <i class="fas fa-user" aria-hidden="true"></i>
-          <span>Nombre y apellido</span>
+          <span>Nombre y Apellido o Familia</span>
         </label>
         <input
           type="text"
-          id="guest-fullname"
-          name="fullname"
+          id="invitado-nombre"
+          name="nombre"
           class="form-control"
-          placeholder="Ej. Camila Fernández"
+          placeholder="Ej. Familia Pérez o Sofía Gómez"
           autocomplete="name"
           required
         >
-        <span id="error-fullname" class="form-error" aria-live="polite"></span>
+        <span id="error-nombre" class="form-error" aria-live="polite"></span>
       </div>
 
-      <!-- Campo 2: Asistencia / Cantidad de invitados -->
+      <!-- Campo 2: Menú de selección estilizado hasta 9 integrantes -->
       <div class="form-group">
-        <label for="guest-attendance" class="form-label">
+        <label id="label-integrantes" for="custom-select-trigger" class="form-label">
           <i class="fas fa-users" aria-hidden="true"></i>
-          <span>Confirmación y cantidad de personas</span>
+          <span>Cantidad de integrantes de familia</span>
         </label>
-        <div class="select-wrapper">
-          <select id="guest-attendance" name="attendance" class="form-control form-select" required>
-            <option value="" disabled selected>Selecciona una opción</option>
-            <option value="1">Sí, asistiré (1 persona)</option>
-            <option value="2">Sí, asistiremos (2 personas)</option>
-            <option value="3">Sí, asistiremos (3 personas)</option>
-            <option value="4">Sí, asistiremos (4 personas)</option>
-            <option value="no">No podré asistir</option>
-          </select>
-          <i class="fas fa-chevron-down select-arrow" aria-hidden="true"></i>
+
+        <div class="custom-select" id="custom-integrantes-select">
+          <input type="hidden" id="invitado-integrantes" name="integrantes" value="" required>
+
+          <button
+            type="button"
+            id="custom-select-trigger"
+            class="custom-select__trigger"
+            role="combobox"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-labelledby="label-integrantes custom-select-value"
+            aria-controls="custom-select-listbox"
+          >
+            <span class="custom-select__left">
+              <i class="fas fa-user-friends custom-select__icon" aria-hidden="true"></i>
+              <span id="custom-select-value" class="custom-select__placeholder">
+                Selecciona cantidad (1 a 9)
+              </span>
+            </span>
+            <i class="fas fa-chevron-down custom-select__arrow" aria-hidden="true"></i>
+          </button>
+
+          <ul
+            id="custom-select-listbox"
+            class="custom-select__menu"
+            role="listbox"
+            aria-labelledby="label-integrantes"
+            tabindex="-1"
+          >
+            <li class="custom-select__option" role="option" data-value="1" aria-selected="false">
+              <span class="option-badge">1</span>
+              <span class="option-text">1 persona (Solo yo)</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="2" aria-selected="false">
+              <span class="option-badge">2</span>
+              <span class="option-text">2 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="3" aria-selected="false">
+              <span class="option-badge">3</span>
+              <span class="option-text">3 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="4" aria-selected="false">
+              <span class="option-badge">4</span>
+              <span class="option-text">4 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="5" aria-selected="false">
+              <span class="option-badge">5</span>
+              <span class="option-text">5 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="6" aria-selected="false">
+              <span class="option-badge">6</span>
+              <span class="option-text">6 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="7" aria-selected="false">
+              <span class="option-badge">7</span>
+              <span class="option-text">7 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="8" aria-selected="false">
+              <span class="option-badge">8</span>
+              <span class="option-text">8 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+            <li class="custom-select__option" role="option" data-value="9" aria-selected="false">
+              <span class="option-badge">9</span>
+              <span class="option-text">9 integrantes</span>
+              <i class="fas fa-check option-check" aria-hidden="true"></i>
+            </li>
+          </ul>
         </div>
-        <span id="error-attendance" class="form-error" aria-live="polite"></span>
+
+        <span id="error-integrantes" class="form-error" aria-live="polite"></span>
       </div>
 
       <button type="submit" class="btn-primary btn-submit">
-        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
         <span>Enviar confirmación</span>
       </button>
     </form>

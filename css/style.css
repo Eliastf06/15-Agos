@@ -189,7 +189,6 @@ body.no-scroll {
   align-items: center;
 }
 
-/* Distintivo "Mis 15 Años" arriba de la foto y más grande */
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -213,7 +212,6 @@ body.no-scroll {
   font-size: 1.05rem;
 }
 
-/* Marco de Arco Celestial para img1.jpeg (sin etiqueta de texto superpuesta) */
 .hero-portrait-stage {
   position: relative;
   display: flex;
@@ -297,7 +295,6 @@ body.no-scroll {
   transform: scale(1.04);
 }
 
-/* Viñeta atmosférica que integra la fotografía con el fondo de la invitación */
 .portrait-vignette {
   position: absolute;
   inset: 0;
@@ -307,7 +304,6 @@ body.no-scroll {
     linear-gradient(180deg, rgba(6, 16, 33, 0.1) 0%, transparent 35%, transparent 68%, rgba(6, 16, 33, 0.78) 100%);
 }
 
-/* Nombre "Agostina" protagonista */
 .hero-title {
   position: relative;
   display: inline-block;
@@ -361,17 +357,17 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   SECCIÓN 2: GALERÍA DE RECUERDOS INTEGRADA (IMG2.JPEG A IMG5.JPEG)
+   SECCIÓN 2: GALERÍA DE RECUERDOS (IMG2.JPEG A IMG10.JPEG EN ORDEN ALEATORIO)
    ========================================================================== */
 .gallery-card {
-  max-width: 760px;
+  max-width: 860px;
 }
 
 .gallery-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2.2vw, 1.2rem);
   margin-top: 0.4rem;
 }
 
@@ -383,8 +379,8 @@ body.no-scroll {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 4.8;
-  padding: 0.45rem;
-  border-radius: 1.25rem;
+  padding: 0.4rem;
+  border-radius: 1.2rem;
   background: linear-gradient(160deg, rgba(125, 211, 252, 0.28), rgba(7, 20, 43, 0.86));
   border: 1px solid rgba(125, 211, 252, 0.34);
   box-shadow: 0 14px 34px rgba(2, 8, 22, 0.65), 0 0 20px rgba(56, 189, 248, 0.14);
@@ -405,7 +401,7 @@ body.no-scroll {
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  border-radius: 0.9rem;
+  border-radius: 0.88rem;
   display: block;
   transition: transform 0.65s var(--ease-reveal);
 }
@@ -414,11 +410,10 @@ body.no-scroll {
   transform: scale(1.045);
 }
 
-/* Viñeta sutil para integrar cada foto con la estética nocturna azul-celeste */
 .gallery-vignette {
   position: absolute;
-  inset: 0.45rem;
-  border-radius: 0.9rem;
+  inset: 0.4rem;
+  border-radius: 0.88rem;
   pointer-events: none;
   background:
     radial-gradient(circle at 50% 45%, transparent 58%, rgba(6, 16, 33, 0.6) 100%),
@@ -427,16 +422,16 @@ body.no-scroll {
 
 .gallery-zoom-badge {
   position: absolute;
-  bottom: 0.9rem;
-  right: 0.9rem;
-  width: 2.15rem;
-  height: 2.15rem;
+  bottom: 0.8rem;
+  right: 0.8rem;
+  width: 2.05rem;
+  height: 2.05rem;
   border-radius: var(--radius-full);
   background: rgba(6, 16, 33, 0.8);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(125, 211, 252, 0.45);
   color: var(--celeste-soft);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -992,7 +987,15 @@ body.no-scroll {
   }
 
   .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
+  }
+
+  .gallery-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 54%;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .music-btn {
