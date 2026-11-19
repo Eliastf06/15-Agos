@@ -5,6 +5,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const SUPABASE_REST_URL = 'https://mnjjjasofqnxutqyktqg.supabase.co/rest/v1/regalos';
   const SUPABASE_ANON_KEY = 'sb_publishable_wWsWKD_VUB5QSGv9342t5Q_ITQ0ru_0';
 
+  // Expresión regular con sinónimos de ropa y prendas habituales (sin acentos y en minúsculas)
+  const CLOTHING_TERMS_REGEX = new RegExp(
+    '\\b(?:' +
+      [
+        // Sinónimos generales de ropa
+        'ropa', 'ropas', 'ropita', 'indumentaria', 'vestimenta', 'vestuario',
+        'prenda', 'prendas', 'atuendo', 'atuendos', 'outfit', 'outfits',
+        'pilcha', 'pilchas', 'tenida', 'moda', 'conjunto', 'conjuntos',
+        // Parte superior
+        'remera', 'remeras', 'remeron', 'remerones', 'camiseta', 'camisetas',
+        'camisa', 'camisas', 'camisola', 'camisolas', 'blusa', 'blusas',
+        'top', 'tops', 'musculosa', 'musculosas', 'chomba', 'chombas',
+        'polo', 'polos', 'body', 'bodys', 'bodie', 'bodies',
+        'corset', 'corsets', 'corse', 'bustier',
+        // Abrigos y tejidos
+        'buzo', 'buzos', 'canguro', 'hoodie', 'hoodies', 'campera', 'camperas',
+        'chaqueta', 'chaquetas', 'abrigo', 'abrigos', 'tapado', 'tapados',
+        'tapadito', 'saco', 'sacos', 'blazer', 'blazers', 'sweater', 'sweaters',
+        'sueter', 'sueteres', 'pullover', 'pulover', 'cardigan', 'cardigans',
+        'chaleco', 'chalecos', 'poncho', 'ponchos', 'ruana', 'ruanas',
+        'piloto', 'pilotos', 'parka', 'parkas', 'rompeviento', 'rompevientos',
+        'gabardina', 'gabardinas', 'sobretodo', 'sobretodos',
+        // Parte inferior
+        'pantalon', 'pantalones', 'jean', 'jeans', 'vaquero', 'vaqueros',
+        'denim', 'jogging', 'joggings', 'jogger', 'joggers', 'babucha', 'babuchas',
+        'calza', 'calzas', 'legging', 'leggings', 'biker', 'bikers',
+        'short', 'shorts', 'bermuda', 'bermudas', 'pollera', 'polleras',
+        'falda', 'faldas', 'minifalda', 'minifaldas', 'palazzo', 'palazzos',
+        'oxford', 'cargo',
+        // Vestidos y enterizos
+        'vestido', 'vestidos', 'solero', 'soleros', 'mono', 'monos',
+        'enterito', 'enteritos', 'enterizo', 'enterizos', 'jardinero', 'jardineros',
+        'overol', 'overoles', 'tunica', 'tunicas', 'traje', 'trajes',
+        // Ropa interior, pijama y traje de baño
+        'pijama', 'pijamas', 'piyama', 'piyamas', 'camison', 'camisones',
+        'bata', 'batas', 'lenceria', 'ropa interior', 'bombacha', 'bombachas',
+        'corpino', 'corpinos', 'bralette', 'bralettes', 'medias', 'soquetes',
+        'cancan', 'cancanes', 'pantimedia', 'pantimedias', 'malla', 'mallas',
+        'bikini', 'bikinis', 'trikini', 'trikinis', 'traje de bano', 'trajes de bano',
+        'pareo', 'pareos',
+        // Accesorios textiles de vestir
+        'bufanda', 'bufandas', 'chalina', 'chalinas', 'gorra', 'gorras',
+        'gorro', 'gorros', 'guantes'
+      ].join('|') +
+    ')\\b',
+    'i'
+  );
+
   const FALLBACK_MODAL_HTML = `
     <div
       id="regalo-overlay"
@@ -35,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="regalo-notice" role="note">
           <i class="fas fa-info-circle regalo-notice__icon" aria-hidden="true"></i>
           <p class="regalo-notice__text">
-            Antes de ingresar el regalo, verifica en la tabla que no esté ya registrado por otro invitado.
+            Puedes consultar la lista antes de ingresar tu obsequio. Si otro invitado ya eligió el mismo regalo, te avisaremos (excepto en ropa), aunque igual podrás registrarlo.
           </p>
         </div>
 
@@ -81,6 +129,34 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/\s+/g, ' ');
   }
 
+  function normalizeSingular(word) {
+    if (word.length <= 3) return word;
+    if (word.endsWith('ces') && word.length > 4) {
+      return `${word.slice(0, -3)}z`;
+    }
+    if (word.endsWith('es') && word.length > 4) {
+      const stem = word.slice(0, -2);
+      if (/[lnrdjs]$/.test(stem)) return stem;
+    }
+    if (word.endsWith('s') && !word.endsWith('ss')) {
+      return word.slice(0, -1);
+    }
+    return word;
+  }
+
+  function normalizePhraseForComparison(value) {
+    return normalizeText(value)
+      .split(' ')
+      .map(normalizeSingular)
+      .join(' ');
+  }
+
+  function isClothingGift(rawValue) {
+    const normalized = normalizeText(rawValue);
+    if (!normalized) return false;
+    return CLOTHING_TERMS_REGEX.test(normalized);
+  }
+
   function capitalizeInitial(value) {
     const cleaned = String(value || '').trim().replace(/\s+/g, ' ');
     if (!cleaned) return '';
@@ -114,43 +190,60 @@ document.addEventListener('DOMContentLoaded', () => {
     let closeTimeoutId = null;
     let isSubmitting = false;
 
-    function isDuplicateGift(rawValue) {
+    function findMatchingGift(rawValue) {
       const normalizedInput = normalizeText(rawValue);
-      if (!normalizedInput) return false;
+      if (!normalizedInput) return null;
 
+      const singularInput = normalizePhraseForComparison(rawValue);
       const existingGifts = Array.isArray(window.RegalosStore?.items)
         ? window.RegalosStore.items
         : [];
 
-      return existingGifts.some((item) => normalizeText(item) === normalizedInput);
+      return (
+        existingGifts.find(
+          (item) =>
+            normalizeText(item) === normalizedInput ||
+            normalizePhraseForComparison(item) === singularInput
+        ) || null
+      );
     }
 
     function setLiveFeedback(type, message) {
       if (!liveFeedback) return;
 
       liveFeedback.className = 'regalo-live-feedback';
-      if (!message) {
-        liveFeedback.innerHTML = '';
-        return;
-      }
+      liveFeedback.textContent = '';
+
+      if (!message) return;
+
+      const icon = document.createElement('i');
+      icon.setAttribute('aria-hidden', 'true');
 
       if (type === 'error') {
         liveFeedback.classList.add('regalo-live-feedback--error');
-        liveFeedback.innerHTML = `<i class="fas fa-exclamation-triangle" aria-hidden="true"></i><span>${message}</span>`;
+        icon.className = 'fas fa-exclamation-circle';
+      } else if (type === 'warning') {
+        liveFeedback.classList.add('regalo-live-feedback--warning');
+        icon.className = 'fas fa-exclamation-triangle';
       } else if (type === 'ok') {
         liveFeedback.classList.add('regalo-live-feedback--ok');
-        liveFeedback.innerHTML = `<i class="fas fa-check-circle" aria-hidden="true"></i><span>${message}</span>`;
+        icon.className = 'fas fa-check-circle';
       }
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = message;
+
+      liveFeedback.appendChild(icon);
+      liveFeedback.appendChild(textSpan);
     }
 
     function validateGiftInRealTime(showEmptyError = false) {
-      const rawValue = regaloInput.value;
-      const trimmed = rawValue.trim();
+      const trimmed = regaloInput.value.trim();
 
-      regaloInput.classList.remove('is-invalid', 'is-valid');
+      regaloInput.classList.remove('is-invalid', 'is-warning', 'is-valid');
+      submitBtn.disabled = isSubmitting;
 
       if (!trimmed) {
-        submitBtn.disabled = false;
         if (showEmptyError) {
           regaloInput.classList.add('is-invalid');
           setLiveFeedback('error', 'Por favor, escribe el regalo que deseas obsequiar.');
@@ -160,18 +253,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
       }
 
-      if (isDuplicateGift(trimmed)) {
-        regaloInput.classList.add('is-invalid');
-        submitBtn.disabled = true;
+      // Si es ropa o cualquier sinónimo/prenda, no se muestra ningún aviso de coincidencia
+      if (isClothingGift(trimmed)) {
+        regaloInput.classList.add('is-valid');
+        setLiveFeedback('ok', 'Listo para registrar en la lista.');
+        return true;
+      }
+
+      const matchedGift = findMatchingGift(trimmed);
+      if (matchedGift) {
+        regaloInput.classList.add('is-warning');
         setLiveFeedback(
-          'error',
-          'Este regalo ya está ingresado en la lista. Por favor, elige otro.'
+          'warning',
+          `Aviso: ya le están dando "${matchedGift}", pero igual puedes registrarlo si deseas.`
         );
-        return false;
+        return true;
       }
 
       regaloInput.classList.add('is-valid');
-      submitBtn.disabled = isSubmitting;
       setLiveFeedback('ok', 'Disponible: este regalo aún no figura en la lista.');
       return true;
     }
@@ -184,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       lastFocusedElement = triggerButton || document.activeElement;
       form.reset();
-      regaloInput.classList.remove('is-invalid', 'is-valid');
+      regaloInput.classList.remove('is-invalid', 'is-warning', 'is-valid');
       submitBtn.disabled = false;
       setLiveFeedback('', '');
 
@@ -250,6 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const formattedGift = capitalizeInitial(regaloInput.value);
+      const isClothing = isClothingGift(formattedGift);
 
       isSubmitting = true;
       submitBtn.disabled = true;
@@ -258,17 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
         '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Guardando...</span>';
 
       try {
-        // Sincronización previa con Supabase para evitar duplicados concurrentes
+        // Sincronizar con Supabase antes de guardar para detectar coincidencias recientes
         if (typeof window.fetchGiftsFromSupabase === 'function') {
           await window.fetchGiftsFromSupabase({ silent: true });
-          if (isDuplicateGift(formattedGift)) {
-            isSubmitting = false;
-            submitBtn.innerHTML = originalBtnHtml;
-            validateGiftInRealTime(true);
-            regaloInput.focus();
-            return;
-          }
         }
+
+        const matchedBeforeSave = isClothing ? null : findMatchingGift(formattedGift);
 
         const response = await fetch(SUPABASE_REST_URL, {
           method: 'POST',
@@ -290,14 +385,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (typeof window.showToast === 'function') {
-          window.showToast(
-            `¡Gracias! "${formattedGift}" se agregó a la lista.`,
-            'fa-check-circle'
-          );
+          if (matchedBeforeSave) {
+            window.showToast(
+              `Se agregó "${formattedGift}" a la lista (ya le estaban dando "${matchedBeforeSave}").`,
+              'fa-exclamation-triangle',
+              4800
+            );
+          } else {
+            window.showToast(
+              `¡Gracias! "${formattedGift}" se agregó a la lista.`,
+              'fa-check-circle'
+            );
+          }
         }
 
         form.reset();
-        regaloInput.classList.remove('is-invalid', 'is-valid');
+        regaloInput.classList.remove('is-invalid', 'is-warning', 'is-valid');
         setLiveFeedback('', '');
         closeModal();
       } catch {
@@ -306,7 +409,10 @@ document.addEventListener('DOMContentLoaded', () => {
           'No se pudo guardar el regalo. Verifica tu conexión e inténtalo nuevamente.'
         );
         if (typeof window.showToast === 'function') {
-          window.showToast('Error al registrar el regalo. Intenta nuevamente.', 'fa-exclamation-circle');
+          window.showToast(
+            'Error al registrar el regalo. Intenta nuevamente.',
+            'fa-exclamation-circle'
+          );
         }
       } finally {
         isSubmitting = false;
