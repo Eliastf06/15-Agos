@@ -100,6 +100,12 @@ body.no-scroll {
   filter: none;
 }
 
+.page-wrapper.is-leaving {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.985);
+  transition: opacity 0.28s var(--ease-reveal), transform 0.28s var(--ease-reveal);
+}
+
 /* Capa fija con multimedia/fondo.png y degradado protector para lectura */
 .site-background {
   position: fixed;
@@ -536,10 +542,6 @@ body.no-scroll {
   padding-bottom: clamp(5.5rem, 11vw, 8rem);
 }
 
-.gifts-page-section {
-  min-height: 100vh;
-}
-
 .section-card {
   position: relative;
   width: 100%;
@@ -732,40 +734,6 @@ body.no-scroll {
   font-weight: 700;
 }
 
-/* Detalle en página de regalos */
-.gift-box-details {
-  width: 100%;
-  max-width: 400px;
-  padding: 1.25rem;
-  margin-bottom: 1.75rem;
-  border-radius: var(--radius-md);
-  background: rgba(4, 13, 30, 0.72);
-  border: 1px solid rgba(125, 211, 252, 0.28);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.gift-detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.gift-detail-label {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--text-muted);
-}
-
-.gift-detail-value {
-  font-size: 1.2rem;
-  letter-spacing: 0.06em;
-  color: var(--celeste-ice);
-}
-
 /* ==========================================================================
    BOTONES PRINCIPAL Y SECUNDARIO
    ========================================================================== */
@@ -804,17 +772,17 @@ body.no-scroll {
   transition: transform 0.28s var(--ease-reveal);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
   filter: brightness(1.07);
   box-shadow: 0 14px 32px rgba(2, 12, 32, 0.65), 0 0 30px rgba(125, 211, 252, 0.65);
 }
 
-.btn-primary:hover i {
+.btn-primary:hover:not(:disabled) i {
   transform: translateX(2px) scale(1.08);
 }
 
-.btn-primary:active {
+.btn-primary:active:not(:disabled) {
   transform: translateY(0);
 }
 

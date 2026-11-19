@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const MUSIC_STORAGE_KEY = 'agostina_bg_music_state';
+
+  const pageWrapper = document.getElementById('page-wrapper');
   const toastContainer = document.getElementById('toast-container');
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
   const bgMusic = document.getElementById('bg-music');
@@ -29,8 +32,33 @@ document.addEventListener('DOMContentLoaded', () => {
   shuffleGalleryItems();
 
   /* ==========================================================================
-     2. MÚSICA DE FONDO AUTOMÁTICA Y CONTROL FLOTANTE SIEMPRE VISIBLE
+     2. MÚSICA DE FONDO CONTINUA Y SINCRONIZADA ENTRE PÁGINAS
      ========================================================================== */
+  function readSavedMusicState() {
+    try {
+      const raw = sessionStorage.getItem(MUSIC_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function persistMusicState() {
+    if (!bgMusic) return;
+    try {
+      sessionStorage.setItem(
+        MUSIC_STORAGE_KEY,
+        JSON.stringify({
+          currentTime: Number.isFinite(bgMusic.currentTime) ? bgMusic.currentTime : 0,
+          isPlaying: !bgMusic.paused,
+          userPaused: userManuallyPaused,
+        })
+      );
+    } catch {
+      // Ignorar si sessionStorage no está disponible
+    }
+  }
+
   function updateMusicButtonState(isPlaying) {
     if (!musicToggle) return;
     const icon = musicToggle.querySelector('i');
@@ -47,6 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function removeInteractionUnlockers() {
+    document.removeEventListener('pointerdown', handleFirstUserInteraction);
+    document.removeEventListener('touchstart', handleFirstUserInteraction);
+    document.removeEventListener('keydown', handleFirstUserInteraction);
+  }
+
   function tryStartBackgroundMusic() {
     if (!bgMusic || userManuallyPaused || !bgMusic.paused) return;
 
@@ -55,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playPromise
         .then(() => {
           updateMusicButtonState(true);
+          persistMusicState();
           removeInteractionUnlockers();
         })
         .catch(() => {
@@ -69,24 +104,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function removeInteractionUnlockers() {
-    document.removeEventListener('pointerdown', handleFirstUserInteraction);
-    document.removeEventListener('touchstart', handleFirstUserInteraction);
-    document.removeEventListener('keydown', handleFirstUserInteraction);
-  }
-
   if (bgMusic) {
     bgMusic.volume = 0.65;
+    const savedState = readSavedMusicState();
 
-    tryStartBackgroundMusic();
-    window.addEventListener('load', tryStartBackgroundMusic, { once: true });
+    if (savedState) {
+      userManuallyPaused = Boolean(savedState.userPaused);
 
-    document.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true });
-    document.addEventListener('touchstart', handleFirstUserInteraction, { passive: true });
-    document.addEventListener('keydown', handleFirstUserInteraction);
+      const applySavedTime = () => {
+        if (typeof savedState.currentTime === 'number' && savedState.currentTime > 0) {
+          const maxTime = Number.isFinite(bgMusic.duration)
+            ? Math.max(0, bgMusic.duration - 0.25)
+            : savedState.currentTime;
+          bgMusic.currentTime = Math.min(savedState.currentTime, maxTime);
+        }
+      };
 
-    bgMusic.addEventListener('play', () => updateMusicButtonState(true));
-    bgMusic.addEventListener('pause', () => updateMusicButtonState(false));
+      if (bgMusic.readyState >= 1) {
+        applySavedTime();
+      } else {
+        bgMusic.addEventListener('loadedmetadata', applySavedTime, { once: true });
+      }
+    }
+
+    if (!userManuallyPaused) {
+      tryStartBackgroundMusic();
+      window.addEventListener('load', tryStartBackgroundMusic, { once: true });
+      document.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true });
+      document.addEventListener('touchstart', handleFirstUserInteraction, { passive: true });
+      document.addEventListener('keydown', handleFirstUserInteraction);
+    } else {
+      updateMusicButtonState(false);
+    }
+
+    bgMusic.addEventListener('play', () => {
+      updateMusicButtonState(true);
+      persistMusicState();
+    });
+
+    bgMusic.addEventListener('pause', () => {
+      updateMusicButtonState(false);
+      persistMusicState();
+    });
+
+    bgMusic.addEventListener('timeupdate', persistMusicState);
+    window.addEventListener('pagehide', persistMusicState);
   }
 
   musicToggle?.addEventListener('click', (event) => {
@@ -95,12 +157,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (bgMusic.paused) {
       userManuallyPaused = false;
-      bgMusic.play().then(() => updateMusicButtonState(true)).catch(() => {});
+      bgMusic
+        .play()
+        .then(() => {
+          updateMusicButtonState(true);
+          persistMusicState();
+        })
+        .catch(() => {});
     } else {
       userManuallyPaused = true;
       bgMusic.pause();
       updateMusicButtonState(false);
+      persistMusicState();
     }
+  });
+
+  // Guardar posición del audio y aplicar microtransición al ir a regalos.html
+  document.querySelectorAll('a[href="regalos.html"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.metaKey || event.ctrlKey) return;
+      event.preventDefault();
+      persistMusicState();
+
+      if (pageWrapper) {
+        pageWrapper.classList.add('is-leaving');
+      }
+
+      setTimeout(() => {
+        window.location.href = 'regalos.html';
+      }, 260);
+    });
   });
 
   /* ==========================================================================
@@ -247,22 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /* ==========================================================================
-     6. COPIAR ALIAS EN LA PÁGINA DE REGALOS
-     ========================================================================== */
-  const copyAliasBtn = document.getElementById('copy-alias-btn');
-  copyAliasBtn?.addEventListener('click', () => {
-    const targetId = copyAliasBtn.getAttribute('data-copy-target');
-    const textToCopy = document.getElementById(targetId)?.textContent.trim();
-
-    if (textToCopy && navigator.clipboard) {
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        window.showToast('Alias copiado al portapapeles', 'fa-check-circle');
-      });
-    }
-  });
-
-  /* ==========================================================================
-     7. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
+     6. SMOOTH REVEAL AL HACER SCROLL Y SINCRONIZACIÓN CON LA PUERTA
      ========================================================================== */
   const revealObserver = new IntersectionObserver(
     (entries) => {

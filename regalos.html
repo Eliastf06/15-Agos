@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Opciones de regalo para los 15 años de Agostina.">
+  <meta name="description" content="Mesa de presentes y lista de regalos para los 15 años de Agostina.">
   <meta name="theme-color" content="#061021">
-  <title>Presentes — Mis 15 Años Agostina</title>
+  <title>Mesa de Presentes — Mis 15 Años Agostina</title>
 
   <!-- Ícono de la página -->
   <link rel="icon" type="image/png" href="multimedia/logo.png">
   <link rel="apple-touch-icon" href="multimedia/logo.png">
 
-  <!-- Tipografías con carga optimizada -->
+  <!-- Tipografías con carga optimizada (font-display: swap) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -19,61 +19,203 @@
   <!-- Iconos Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Estilos exclusivos de la página de regalos y su modal -->
+  <link rel="stylesheet" href="css/regalo-modal.css">
+  <link rel="stylesheet" href="css/regalos.css">
 </head>
 <body>
-  <div class="page-wrapper is-revealed">
-    <!-- Mismo fondo fijo con filtro de legibilidad -->
-    <div class="site-background" aria-hidden="true"></div>
+  <!-- Barra superior de progreso visual -->
+  <div class="scroll-progress-track" aria-hidden="true">
+    <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+  </div>
 
-    <main id="main-content" class="main-content">
-      <section class="content-section gifts-page-section" aria-labelledby="regalos-titulo">
-        <div class="section-card reveal-on-scroll is-visible">
-          <div class="section-icon-badge" aria-hidden="true">
-            <i class="fas fa-gift"></i>
-          </div>
+  <!-- Música de fondo continua -->
+  <audio id="bg-music" preload="auto" loop>
+    <source src="multimedia/background-song.mp3" type="audio/mpeg">
+  </audio>
 
-          <span class="section-eyebrow">Mis 15 Años — Agostina</span>
-          <h1 id="regalos-titulo" class="section-title">Mesa de Presentes</h1>
+  <!-- Control flotante de música -->
+  <button
+    type="button"
+    id="music-toggle"
+    class="music-btn"
+    aria-label="Activar música de fondo"
+    aria-pressed="false"
+    title="Música de fondo"
+  >
+    <span class="music-btn__ring" aria-hidden="true"></span>
+    <i class="fas fa-volume-mute" aria-hidden="true"></i>
+  </button>
 
-          <div class="section-ornament" aria-hidden="true">
-            <span class="ornament-line"></span>
-            <i class="fas fa-sparkles"></i>
-            <span class="ornament-line"></span>
-          </div>
+  <!-- Contenedor donde se carga dinámicamente regalo-modal.html -->
+  <div id="regalo-modal-slot" data-modal-src="regalo-modal.html"></div>
 
-          <p class="section-description">
-            El mejor regalo es compartir juntos esta noche tan especial. Si deseas obsequiarme algo, puedes hacerlo mediante transferencia o en el buzón de sobres durante la fiesta.
-          </p>
+  <div id="regalos-page-wrapper" class="regalos-page-wrapper">
+    <!-- Fondo ambiental fijo con velo de legibilidad -->
+    <div class="regalos-background" aria-hidden="true"></div>
+    <div class="regalos-ambient-orbs" aria-hidden="true">
+      <span class="ambient-orb ambient-orb--left"></span>
+      <span class="ambient-orb ambient-orb--right"></span>
+    </div>
 
-          <div class="gift-box-details">
-            <div class="gift-detail-item">
-              <span class="gift-detail-label">Alias Bancario</span>
-              <strong id="gift-alias" class="gift-detail-value">aagooss.mpp</strong>
+    <!-- Barra superior de navegación rápida -->
+    <header class="regalos-topbar">
+      <div class="regalos-topbar__inner">
+        <a href="index.html" class="topbar-back-link" data-page-transition>
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <span>Invitación</span>
+        </a>
+
+        <div class="topbar-crest">
+          <i class="fas fa-crown" aria-hidden="true"></i>
+          <span>Mis 15 Años · Agostina</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="regalos-main">
+      <!-- Encabezado editorial de la página de regalos -->
+      <section class="regalos-hero reveal-item" aria-labelledby="regalos-titulo">
+        <div class="regalos-crest-badge" aria-hidden="true">
+          <i class="fas fa-gift"></i>
+        </div>
+
+        <span class="regalos-eyebrow">Un detalle especial</span>
+        <h1 id="regalos-titulo" class="regalos-title">Mesa de Presentes</h1>
+
+        <div class="regalos-ornament" aria-hidden="true">
+          <span class="ornament-line"></span>
+          <i class="fas fa-gem"></i>
+          <span class="ornament-line"></span>
+        </div>
+
+        <p class="regalos-lead">
+          Tu presencia en esta noche tan soñada es mi mayor alegría. Si deseas tener un obsequio conmigo, puedes elegir y registrar un regalo en la lista o realizar una transferencia.
+        </p>
+      </section>
+
+      <!-- Módulo 1: Tabla de regalos conectados a Supabase con buscador -->
+      <section class="regalos-block reveal-item" aria-labelledby="tabla-regalos-titulo">
+        <div class="registry-card">
+          <div class="registry-card__header">
+            <div class="registry-card__title-wrap">
+              <div class="registry-card__icon" aria-hidden="true">
+                <i class="fas fa-list-ul"></i>
+              </div>
+              <div>
+                <h2 id="tabla-regalos-titulo" class="registry-card__title">Regalos elegidos</h2>
+                <span id="gifts-count-badge" class="registry-card__count" aria-live="polite">
+                  Cargando lista...
+                </span>
+              </div>
             </div>
 
             <button
               type="button"
-              id="copy-alias-btn"
-              class="btn-secondary"
-              data-copy-target="gift-alias"
+              class="btn-register-gift"
+              data-open-regalo-modal
+              aria-haspopup="dialog"
+              aria-controls="regalo-overlay"
             >
-              <i class="fas fa-copy" aria-hidden="true"></i>
-              <span>Copiar alias</span>
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span>Agregar regalo</span>
             </button>
           </div>
 
-          <a href="index.html" class="btn-primary">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i>
-            <span>Volver a la invitación</span>
-          </a>
+          <!-- Buscador insensible a mayúsculas, minúsculas y acentos -->
+          <div class="registry-search-bar">
+            <label for="gift-search-input" class="sr-only">
+              Buscar regalo en la lista
+            </label>
+            <div class="search-input-wrap">
+              <i class="fas fa-search search-input-icon" aria-hidden="true"></i>
+              <input
+                type="text"
+                id="gift-search-input"
+                class="search-input"
+                placeholder="Buscar un regalo en la lista..."
+                autocomplete="off"
+                spellcheck="false"
+                aria-controls="gifts-table-body"
+              >
+              <button
+                type="button"
+                id="clear-search-btn"
+                class="search-clear-btn"
+                aria-label="Limpiar búsqueda"
+                hidden
+              >
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="registry-table-wrap">
+            <table class="registry-table" aria-labelledby="tabla-regalos-titulo">
+              <thead>
+                <tr>
+                  <th scope="col">Obsequio</th>
+                </tr>
+              </thead>
+              <tbody id="gifts-table-body">
+                <tr class="skeleton-row" aria-hidden="true">
+                  <td><span class="skeleton-line"></span></td>
+                </tr>
+                <tr class="skeleton-row" aria-hidden="true">
+                  <td><span class="skeleton-line skeleton-line--short"></span></td>
+                </tr>
+                <tr class="skeleton-row" aria-hidden="true">
+                  <td><span class="skeleton-line skeleton-line--medium"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
+
+      <!-- Módulo 2: Tarjeta dedicada de Alias Bancario -->
+      <section class="regalos-block reveal-item" aria-labelledby="alias-titulo">
+        <div class="transfer-card">
+          <div class="transfer-card__header">
+            <span class="transfer-card__badge">
+              <i class="fas fa-university" aria-hidden="true"></i>
+              <span>Transferencia</span>
+            </span>
+            <h2 id="alias-titulo" class="transfer-card__title">Datos para obsequio digital</h2>
+          </div>
+
+          <div class="alias-box">
+            <span class="alias-box__label">Alias Bancario</span>
+            <strong id="gift-alias" class="alias-box__value">aagooss.mpp</strong>
+          </div>
+
+          <button
+            type="button"
+            id="copy-alias-btn"
+            class="btn-copy-alias"
+            data-copy-target="gift-alias"
+          >
+            <i class="fas fa-copy" aria-hidden="true"></i>
+            <span>Copiar alias</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Navegación inferior de regreso -->
+      <nav class="regalos-footer-nav reveal-item" aria-label="Navegación de regreso">
+        <a href="index.html" class="btn-return-invite" data-page-transition>
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <span>Volver a la invitación</span>
+        </a>
+      </nav>
     </main>
   </div>
 
+  <!-- Contenedor de notificaciones Toast accesibles -->
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
-  <script src="js/script.js"></script>
+
+  <!-- Scripts exclusivos de la página de regalos y su modal -->
+  <script src="js/regalo-modal.js"></script>
+  <script src="js/regalos.js"></script>
 </body>
 </html>

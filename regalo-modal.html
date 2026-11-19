@@ -1,0 +1,69 @@
+<!-- Modal para Agregar Regalo (regalo-modal.html) -->
+<div
+  id="regalo-overlay"
+  class="regalo-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="regalo-modal-titulo"
+  aria-hidden="true"
+>
+  <div class="regalo-card">
+    <button
+      type="button"
+      id="regalo-close-btn"
+      class="regalo-close-btn"
+      aria-label="Cerrar ventana para agregar regalo"
+    >
+      <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+
+    <div class="regalo-card__header">
+      <div class="regalo-badge-icon" aria-hidden="true">
+        <i class="fas fa-gift"></i>
+      </div>
+      <span class="regalo-eyebrow">Mesa de Presentes · Agostina</span>
+      <h2 id="regalo-modal-titulo" class="regalo-title">Registrar Regalo</h2>
+    </div>
+
+    <!-- Aviso preventivo antes de ingresar el regalo -->
+    <div class="regalo-notice" role="note">
+      <i class="fas fa-info-circle regalo-notice__icon" aria-hidden="true"></i>
+      <p class="regalo-notice__text">
+        Antes de ingresar el regalo, verifica en la tabla que no esté ya registrado por otro invitado.
+      </p>
+    </div>
+
+    <form id="regalo-form" class="regalo-form" novalidate>
+      <!-- Único campo: Nombre del regalo -->
+      <div class="form-group">
+        <label for="regalo-nombre" class="form-label">
+          <i class="fas fa-sparkles" aria-hidden="true"></i>
+          <span>¿Qué regalo le darás?</span>
+        </label>
+        <input
+          type="text"
+          id="regalo-nombre"
+          name="regalo"
+          class="form-control"
+          placeholder="Ej. Juego de toallas, Cafetera, Set de copas..."
+          autocomplete="off"
+          maxlength="120"
+          required
+        >
+
+        <!-- Validación en tiempo real -->
+        <div
+          id="regalo-live-feedback"
+          class="regalo-live-feedback"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+      </div>
+
+      <button type="submit" id="regalo-submit-btn" class="btn-primary btn-submit">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        <span>Guardar regalo</span>
+      </button>
+    </form>
+  </div>
+</div>
