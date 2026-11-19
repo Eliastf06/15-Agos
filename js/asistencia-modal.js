@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalSlot = document.getElementById('asistencia-modal-slot');
   if (!modalSlot) return;
 
-  const WHATSAPP_NUMBER = '5491136134608';
+  const WHATSAPP_NUMBER = '5492646772201';
 
   const FALLBACK_MODAL_HTML = `
     <div
